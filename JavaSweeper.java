@@ -1,11 +1,15 @@
-import java.awt.Dimension;
-
+import java.awt.*;
 import javax.swing.*;
+import java.io.*;
 
 public class JavaSweeper extends JFrame
 {
     private JPanel panel;
 
+
+    private final int COLS = 15;
+    private final int ROWS = 1;
+    private final int IMAGE_SIZE = 50;
     public static void main (String[] args)
     {
         new JavaSweeper(); 
@@ -26,11 +30,29 @@ public class JavaSweeper extends JFrame
     }
 
     private void initPanel()
-    {
-        panel = new JPanel(); //создаем новую панелъ
-        panel.setPreferredSize(new Dimension(500, 500)); //задаем ей размер
+    {   
+
+        panel = new JPanel()
+        {
+            @Override 
+            protected void paintComponent (Graphics g)
+            {
+                super.paintComponent(g);
+                g.drawImage( getImage("bomb"), 0, 0, this);
+                g.drawImage( getImage("nobomb"), IMAGE_SIZE, 0, this);
+                g.drawImage( getImage("num1"),  2 * IMAGE_SIZE , 0, this);
+                g.drawImage( getImage("flaged"), 3  * IMAGE_SIZE , 0, this);
+            }
+        }; 
+        panel.setPreferredSize(new Dimension(COLS * IMAGE_SIZE, ROWS * IMAGE_SIZE)); //задаем ей размер
         add (panel);
     }
 
+    private Image getImage (String name)
+    {
+        String filename = "res/img/" + name.toLowerCase() + ".png"; 
+        ImageIcon icon = new ImageIcon (getClass().getResource(filename));
+        return icon.getImage();
+    }
 
 }
